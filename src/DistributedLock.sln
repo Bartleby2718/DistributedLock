@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributedLock", "DistributedLock\DistributedLock.csproj", "{C1F56B68-C2EE-48E5-A99B-B40D397AE34F}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{D14FE348-E866-4784-8345-DD15FB697E4E}"
 	ProjectSection(SolutionItems) = preProject
 		CopyPackageToPublishDirectory.targets = CopyPackageToPublishDirectory.targets
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		FixDistributedLockCoreDependencyVersion.targets = FixDistributedLockCoreDependencyVersion.targets
 	EndProjectSection
 EndProject
@@ -35,7 +37,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributedLock.ZooKeeper",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributedLock.MySql", "DistributedLock.MySql\DistributedLock.MySql.csproj", "{6C13E55C-51A7-47CD-88A5-7C8564EBCB3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DistributedLock.Oracle", "DistributedLock.Oracle\DistributedLock.Oracle.csproj", "{1CAB9A1D-0C02-459C-A90E-47819832BD58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DistributedLock.Oracle", "DistributedLock.Oracle\DistributedLock.Oracle.csproj", "{1CAB9A1D-0C02-459C-A90E-47819832BD58}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
