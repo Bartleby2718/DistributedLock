@@ -80,7 +80,8 @@ public sealed partial class ZooKeeperDistributedSemaphore : IInternalDistributed
 
     async ValueTask<ZooKeeperDistributedSemaphoreHandle?> IInternalDistributedSemaphore<ZooKeeperDistributedSemaphoreHandle>.InternalTryAcquireAsync(TimeoutValue timeout, CancellationToken cancellationToken)
     {
-        var nodeHandle = await this._synchronizationHelper.TryAcquireAsync(
+        var nodeHandle = await this._synchronizationHelper
+            .TryAcquireAsync(
                 hasAcquired: state => Array.FindIndex(state.SortedChildren, t => t.Path == state.EphemeralNodePath) < this.MaxCount,
                 waitAsync: async (zooKeeper, state, watcher) =>
                 {
@@ -90,7 +91,9 @@ public sealed partial class ZooKeeperDistributedSemaphore : IInternalDistributed
                     // if we're the next node in line for a ticket, wait for any changes in the collection of children
                     if (ephemeralNodeIndex == this.MaxCount)
                     {
-                        var childNames = new HashSet<string>((await zooKeeper.getChildrenAsync(this.Path.ToString(), watcher).ConfigureAwait(false)).Children);
+                        // should not set the watch flag to avoid the herd effect
+                        // https://zookeeper.apache.org/doc/r3.9.2/recipes.html#sc_recipes_Locks
+                        var childNames = new HashSet<string>((await zooKeeper.getChildrenAsync(this.Path.ToString(), watch: false).ConfigureAwait(false)).Children);
                         // If any of the children in front of us are missing, then the wait is done. Otherwise,
                         // let the watcher notify us when there is any change to the set of children
                         return state.SortedChildren.Take(ephemeralNodeIndex)

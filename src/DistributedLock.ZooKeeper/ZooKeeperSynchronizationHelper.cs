@@ -67,7 +67,9 @@ internal class ZooKeeperSynchronizationHelper
             while (true)
             {
                 // get the children of the node, filter them by prefix, and sort them by age; we'll use this to determine our place in the list
-                var children = await connection.ZooKeeper.getChildrenAsync(this.Path.ToString()).ConfigureAwait(false);
+                // should not set the watch flag to avoid the herd effect
+                // https://zookeeper.apache.org/doc/r3.9.2/recipes.html#sc_recipes_Locks
+                var children = await connection.ZooKeeper.getChildrenAsync(this.Path.ToString(), watch: false).ConfigureAwait(false);
                 var sortedChildren = await ZooKeeperSequentialPathHelper.FilterAndSortAsync(
                     parentNode: this.Path.ToString(),
                     childrenNames: children.Children,
