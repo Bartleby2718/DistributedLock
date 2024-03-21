@@ -59,6 +59,7 @@ internal static class ZooKeeperNodeCreator
             var toCreate = new Stack<ZooKeeperPath>();
             toCreate.Push(directory);
             List<ZooKeeperPath>? created = null;
+            var numberOfTries = 5;
             do
             {
                 var directoryToCreate = toCreate.Peek();
@@ -80,6 +81,16 @@ internal static class ZooKeeperNodeCreator
                 catch (KeeperException.NoNodeException) // parent needs to be created
                 {
                     toCreate.Push(directoryToCreate.GetDirectory()!.Value);
+                }
+                catch (KeeperException.ConnectionLossException) // also a recoverable error but the operation was non-idempotent
+                {
+                    if (--numberOfTries == 0)
+                    {
+                        // on an unhandled failure, attempt to clean up our work
+                        if (created != null) { await TryCleanUpCreatedDirectoriesAsync(created).ConfigureAwait(false); }
+
+                        throw;
+                    }
                 }
                 catch
                 {
