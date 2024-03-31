@@ -16,22 +16,31 @@ public class TimeoutValueTest
     [Test]
     public void TestProperties()
     {
-        Assert.That(default(TimeoutValue).IsZero, Is.True);
-        Assert.That(default(TimeoutValue).IsInfinite, Is.False);
-        Assert.That(default(TimeoutValue).InMilliseconds, Is.EqualTo(0));
-        Assert.That(default(TimeoutValue).InSeconds, Is.EqualTo(0));
+        Assert.Multiple(() =>
+        {
+            Assert.That(default(TimeoutValue).IsZero, Is.True);
+            Assert.That(default(TimeoutValue).IsInfinite, Is.False);
+            Assert.That(default(TimeoutValue).InMilliseconds, Is.EqualTo(0));
+            Assert.That(default(TimeoutValue).InSeconds, Is.EqualTo(0));
+        });
 
         TimeoutValue infinite = Timeout.InfiniteTimeSpan;
-        Assert.That(infinite.IsZero, Is.False);
-        Assert.That(infinite.IsInfinite, Is.True);
-        Assert.That(infinite.InMilliseconds, Is.EqualTo(-1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(infinite.IsZero, Is.False);
+            Assert.That(infinite.IsInfinite, Is.True);
+            Assert.That(infinite.InMilliseconds, Is.EqualTo(-1));
+        });
         Assert.Throws<InvalidOperationException>(() => infinite.InSeconds.ToString());
 
         TimeoutValue normal = TimeSpan.FromSeconds(10.4);
-        Assert.That(normal.IsZero, Is.False);
-        Assert.That(normal.IsInfinite, Is.False);
-        Assert.That(normal.InMilliseconds, Is.EqualTo(10400));
-        Assert.That(normal.InSeconds, Is.EqualTo(10));
+        Assert.Multiple(() =>
+        {
+            Assert.That(normal.IsZero, Is.False);
+            Assert.That(normal.IsInfinite, Is.False);
+            Assert.That(normal.InMilliseconds, Is.EqualTo(10400));
+            Assert.That(normal.InSeconds, Is.EqualTo(10));
+        });
     }
 
     [Test]
@@ -61,21 +70,27 @@ public class TimeoutValueTest
 
                 if (a == b)
                 {
-                    Assert.That(aValue == bValue, Is.True);
-                    Assert.That(aValue != bValue, Is.False);
-                    Assert.That(aValue.Equals(bValue), Is.True);
-                    Assert.That(aValue.Equals((object)bValue), Is.True);
-                    Assert.That(Equals(aValue, bValue), Is.True);
-                    Assert.That(bValue.GetHashCode(), Is.EqualTo(aValue.GetHashCode()));
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(aValue == bValue, Is.True);
+                        Assert.That(aValue != bValue, Is.False);
+                        Assert.That(aValue.Equals(bValue), Is.True);
+                        Assert.That(aValue.Equals((object)bValue), Is.True);
+                        Assert.That(Equals(aValue, bValue), Is.True);
+                        Assert.That(bValue.GetHashCode(), Is.EqualTo(aValue.GetHashCode()));
+                    });
                 }
                 else
                 {
-                    Assert.That(aValue == bValue, Is.False);
-                    Assert.That(aValue != bValue, Is.True);
-                    Assert.That(aValue.Equals(bValue), Is.False);
-                    Assert.That(aValue.Equals((object)bValue), Is.False);
-                    Assert.That(Equals(aValue, bValue), Is.False);
-                    Assert.That(bValue.GetHashCode(), Is.Not.EqualTo(aValue.GetHashCode()));
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(aValue == bValue, Is.False);
+                        Assert.That(aValue != bValue, Is.True);
+                        Assert.That(aValue.Equals(bValue), Is.False);
+                        Assert.That(aValue.Equals((object)bValue), Is.False);
+                        Assert.That(Equals(aValue, bValue), Is.False);
+                        Assert.That(bValue.GetHashCode(), Is.Not.EqualTo(aValue.GetHashCode()));
+                    });
                 }
             }
         }

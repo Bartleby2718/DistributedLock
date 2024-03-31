@@ -136,8 +136,11 @@ public class ApiTest
         var publicTypes = GetPublicTypes(assembly);
         foreach (var publicType in publicTypes)
         {
-            Assert.That(publicType.GetMethod("GetSafeName", BindingFlags.Public | BindingFlags.Static), Is.Null);
-            Assert.That(publicType.GetProperty("MaxNameLength", BindingFlags.Public | BindingFlags.Static), Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(publicType.GetMethod("GetSafeName", BindingFlags.Public | BindingFlags.Static), Is.Null);
+                Assert.That(publicType.GetProperty("MaxNameLength", BindingFlags.Public | BindingFlags.Static), Is.Null);
+            });
         }
     }
 

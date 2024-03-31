@@ -71,18 +71,24 @@ public class ZooKeeperPathTest
             {
                 if (i == j)
                 {
-                    Assert.That(paths[i] == paths[j], Is.True);
-                    Assert.That(paths[i] != paths[j], Is.False);
-                    Assert.That(paths[i].Equals(paths[j]), Is.True);
-                    Assert.That(Equals(paths[i], paths[j]), Is.True);
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(paths[i] == paths[j], Is.True);
+                        Assert.That(paths[i] != paths[j], Is.False);
+                        Assert.That(paths[i].Equals(paths[j]), Is.True);
+                        Assert.That(Equals(paths[i], paths[j]), Is.True);
+                    });
                 }
                 else
                 {
-                    Assert.That(paths[i] == paths[j], Is.False);
-                    Assert.That(paths[i] != paths[j], Is.True);
-                    Assert.That(paths[i].Equals(paths[j]), Is.False);
-                    Assert.That(Equals(paths[i], paths[j]), Is.False);
-                    Assert.That(paths[j].GetHashCode(), Is.Not.EqualTo(paths[i].GetHashCode()));
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(paths[i] == paths[j], Is.False);
+                        Assert.That(paths[i] != paths[j], Is.True);
+                        Assert.That(paths[i].Equals(paths[j]), Is.False);
+                        Assert.That(Equals(paths[i], paths[j]), Is.False);
+                        Assert.That(paths[j].GetHashCode(), Is.Not.EqualTo(paths[i].GetHashCode()));
+                    });
                 }
             }
         }

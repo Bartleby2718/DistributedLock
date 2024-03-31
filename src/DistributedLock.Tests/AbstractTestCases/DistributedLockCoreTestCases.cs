@@ -260,9 +260,12 @@ public abstract class DistributedLockCoreTestCases<TLockProvider, TStrategy>
         }
         else
         {
-            // otherwise, check that the names still contain the suffixes we added
-            Assert.That(lowerName.IndexOf(lowerBaseName, StringComparison.OrdinalIgnoreCase) >= 0, Is.True);
-            Assert.That(upperName.IndexOf(upperBaseName, StringComparison.OrdinalIgnoreCase) >= 0, Is.True);
+            Assert.Multiple(() =>
+            {
+                // otherwise, check that the names still contain the suffixes we added
+                Assert.That(lowerName.IndexOf(lowerBaseName, StringComparison.OrdinalIgnoreCase) >= 0, Is.True);
+                Assert.That(upperName.IndexOf(upperBaseName, StringComparison.OrdinalIgnoreCase) >= 0, Is.True);
+            });
         }
     }
 
@@ -312,8 +315,11 @@ public abstract class DistributedLockCoreTestCases<TLockProvider, TStrategy>
 
                 handleLostHelper.Dispose();
 
-                Assert.That(canceledEvent.Wait(TimeSpan.FromSeconds(10)), Is.True);
-                Assert.That(handle.HandleLostToken.IsCancellationRequested, Is.True);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(canceledEvent.Wait(TimeSpan.FromSeconds(10)), Is.True);
+                    Assert.That(handle.HandleLostToken.IsCancellationRequested, Is.True);
+                });
             }
         }
         finally
@@ -391,8 +397,11 @@ public abstract class DistributedLockCoreTestCases<TLockProvider, TStrategy>
     {
         var lockName = this._lockProvider.GetUniqueSafeName();
         var command = this.RunLockTaker(this._lockProvider, this._lockProvider.GetCrossProcessLockType(), lockName);
-        Assert.That(command.StandardOutput.ReadLineAsync().Wait(TimeSpan.FromSeconds(10)), Is.True);
-        Assert.That(command.Task.Wait(TimeSpan.FromSeconds(.1)), Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command.StandardOutput.ReadLineAsync().Wait(TimeSpan.FromSeconds(10)), Is.True);
+            Assert.That(command.Task.Wait(TimeSpan.FromSeconds(.1)), Is.False);
+        });
 
         var @lock = this._lockProvider.CreateLockWithExactName(lockName);
         @lock.TryAcquire().ShouldEqual(null, this.GetType().Name);
@@ -401,9 +410,12 @@ public abstract class DistributedLockCoreTestCases<TLockProvider, TStrategy>
         command.StandardInput.Flush();
         
         using var handle = @lock.TryAcquire(TimeSpan.FromSeconds(10));
-        Assert.That(handle, Is.Not.Null, this.GetType().Name);
+        Assert.Multiple(() =>
+        {
+            Assert.That(handle, Is.Not.Null, this.GetType().Name);
 
-        Assert.That(command.Task.Wait(TimeSpan.FromSeconds(10)), Is.True);
+            Assert.That(command.Task.Wait(TimeSpan.FromSeconds(10)), Is.True);
+        });
     }
 
     [Test]
@@ -422,8 +434,11 @@ public abstract class DistributedLockCoreTestCases<TLockProvider, TStrategy>
     {
         var name = this._lockProvider.GetUniqueSafeName($"cpl-{asyncWait}-{kill}");
         var command = this.RunLockTaker(this._lockProvider, this._lockProvider.GetCrossProcessLockType(), name);
-        Assert.That(command.StandardOutput.ReadLineAsync().Wait(TimeSpan.FromSeconds(10)), Is.True);
-        Assert.That(command.Task.IsCompleted, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command.StandardOutput.ReadLineAsync().Wait(TimeSpan.FromSeconds(10)), Is.True);
+            Assert.That(command.Task.IsCompleted, Is.False);
+        });
 
         var @lock = this._lockProvider.CreateLockWithExactName(name);
 

@@ -43,7 +43,7 @@ public class ZooKeeperConnectionTest
         var zooKeeper1 = connection1.ZooKeeper;
 
         connection1.Dispose();
-        Assert.That(await TestHelper.WaitForAsync(() => (zooKeeper1.getState() == ZooKeeper.States.CLOSED).AsValueTask(), TimeSpan.FromSeconds(3)), Is.True);
+        await Assert.ThatAsync(() => TestHelper.WaitForAsync(() => (zooKeeper1.getState() == ZooKeeper.States.CLOSED).AsValueTask(), TimeSpan.FromSeconds(3)), Is.True);
 
         using var connection2 = await pool.ConnectAsync(GetConnectionInfo(), CancellationToken.None);
         Assert.That(connection2.ZooKeeper, Is.Not.SameAs(zooKeeper1));
@@ -56,7 +56,7 @@ public class ZooKeeperConnectionTest
         var pool = new ZooKeeperConnection.Pool(maxAge: TimeSpan.FromSeconds(2));
 
         using var connection = await pool.ConnectAsync(GetConnectionInfo(), CancellationToken.None);
-        Assert.That(await TestHelper.WaitForAsync(
+        await Assert.ThatAsync(() => TestHelper.WaitForAsync(
             async () =>
             {
                 using var testConnectionInfo = await pool.ConnectAsync(GetConnectionInfo(), CancellationToken.None);
@@ -68,7 +68,7 @@ public class ZooKeeperConnectionTest
         connection.ZooKeeper.getState().ShouldEqual(ZooKeeper.States.CONNECTED);
         var zooKeeper = connection.ZooKeeper;
         connection.Dispose();
-        Assert.That(await TestHelper.WaitForAsync(() => (zooKeeper.getState() != ZooKeeper.States.CONNECTED).AsValueTask(), TimeSpan.FromSeconds(1)), Is.True);
+        await Assert.ThatAsync(() => TestHelper.WaitForAsync(() => (zooKeeper.getState() != ZooKeeper.States.CONNECTED).AsValueTask(), TimeSpan.FromSeconds(1)), Is.True);
     }
 
     [Test]

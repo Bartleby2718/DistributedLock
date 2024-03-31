@@ -51,7 +51,7 @@ public abstract class ZooKeeperSynchronizationCoreTestCases<TLockProvider>
                 Assert.That(handle, Is.Not.Null);
             }
 
-            Assert.That(await connection.ZooKeeper.existsAsync(path.ToString()), Is.Not.Null);
+            await Assert.ThatAsync(() => connection.ZooKeeper.existsAsync(path.ToString()), Is.Not.Null);
         }
         finally
         {
@@ -128,7 +128,7 @@ public abstract class ZooKeeperSynchronizationCoreTestCases<TLockProvider>
 
         Assert.ThrowsAsync<KeeperException.NoAuthException>(() => invalidAclLock.AcquireAsync().AsTask());
 
-        Assert.That(await connection.ZooKeeper.existsAsync(invalidAclLock.Name), Is.Null);
+        await Assert.ThatAsync(() => connection.ZooKeeper.existsAsync(invalidAclLock.Name), Is.Null);
 
         this._provider.Strategy.Options = null;
         var validLock = this._provider.CreateLock(string.Empty);
@@ -155,10 +155,10 @@ public abstract class ZooKeeperSynchronizationCoreTestCases<TLockProvider>
 
         await using (await @lock.AcquireAsync())
         {
-            Assert.That(await connection.ZooKeeper.existsAsync(directory.ToString()), Is.Not.Null);
+            await Assert.ThatAsync(() => connection.ZooKeeper.existsAsync(directory.ToString()), Is.Not.Null);
         }
 
-        Assert.That(await connection.ZooKeeper.existsAsync(directory.ToString()), Is.Not.Null, "directory still exists");
+        await Assert.ThatAsync(() => connection.ZooKeeper.existsAsync(directory.ToString()), Is.Not.Null, "directory still exists");
     }
 
     [Test]

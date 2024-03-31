@@ -20,9 +20,12 @@ public class PostgresConnectionOptionsBuilderTest
     public void TestDefaults()
     {
         var options = PostgresConnectionOptionsBuilder.GetOptions(null);
-        Assert.That(options.keepaliveCadence.IsInfinite, Is.True);
-        Assert.That(options.useMultiplexing, Is.True);
-        Assert.That(options.useTransaction, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(options.keepaliveCadence.IsInfinite, Is.True);
+            Assert.That(options.useMultiplexing, Is.True);
+            Assert.That(options.useTransaction, Is.False);
+        });
         options.ShouldEqual(PostgresConnectionOptionsBuilder.GetOptions(o => { }));
     }
 
@@ -30,7 +33,10 @@ public class PostgresConnectionOptionsBuilderTest
     public void TestUseTransactionDoesNotRequireDisablingMultiplexing()
     {
         var options = PostgresConnectionOptionsBuilder.GetOptions(o => o.UseTransaction());
-        Assert.That(options.useTransaction, Is.True);
-        Assert.That(options.useMultiplexing, Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(options.useTransaction, Is.True);
+            Assert.That(options.useMultiplexing, Is.False);
+        });
     }
 }

@@ -163,8 +163,11 @@ public class PostgresBehaviorTest
         await killCommand.ExecuteNonQueryAsync();
 
         Assert.ThrowsAsync<PostgresException>(getPidCommand.ExecuteScalarAsync);
-        Assert.That(connection.State, Is.Not.EqualTo(ConnectionState.Open));
+        Assert.Multiple(() =>
+        {
+            Assert.That(connection.State, Is.Not.EqualTo(ConnectionState.Open));
 
-        Assert.That(stateChangedEvent.Wait(TimeSpan.FromSeconds(5)), Is.True);
+            Assert.That(stateChangedEvent.Wait(TimeSpan.FromSeconds(5)), Is.True);
+        });
     }
 }

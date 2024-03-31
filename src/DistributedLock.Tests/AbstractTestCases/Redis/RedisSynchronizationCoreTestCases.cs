@@ -52,7 +52,7 @@ public abstract class RedisSynchronizationCoreTestCases<TLockProvider>
         this._provider.Strategy.SetOptions(o => o.MinValidityTime(RedisDistributedSynchronizationOptionsBuilder.DefaultExpiry.TimeSpan - TimeSpan.FromSeconds(.2)));
         var @lock = this._provider.CreateLock("lock");
 
-        Assert.That(await @lock.TryAcquireAsync(), Is.Null);
+        await Assert.ThatAsync(async () => await @lock.TryAcquireAsync(), Is.Null);
 
         @event.Set(); // just to free the waiting threads
     }
@@ -110,7 +110,7 @@ public abstract class RedisSynchronizationCoreTestCases<TLockProvider>
         var acquireTask = @lock.TryAcquireAsync().AsTask();
         Assert.That(acquireTask.Wait(TimeSpan.FromMilliseconds(50)), Is.False);
         @event.Set();
-        Assert.That(await acquireTask, Is.Null);
+        await Assert.ThatAsync(() => acquireTask, Is.Null);
 
         this._provider.Strategy.DatabaseProvider.Databases = new[] { RedisServer.GetDefaultServer(0).Multiplexer.GetDatabase() };
         var singleDatabaseLock = this._provider.CreateLock("lock");

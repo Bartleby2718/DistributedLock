@@ -34,7 +34,8 @@ public class OracleDistributedSynchronizationProviderTest
             await using (var upgradeHandle = await provider.TryAcquireUpgradeableReadLockAsync(LockName))
             {
                 Assert.That(upgradeHandle, Is.Not.Null);
-                Assert.That(await upgradeHandle!.TryUpgradeToWriteLockAsync(), Is.False);
+                // using the keywords async and await is a workaround suggested in https://github.com/nunit/nunit/issues/4588
+                await Assert.ThatAsync(async () => await upgradeHandle!.TryUpgradeToWriteLockAsync(), Is.False);
             }
 
             await using var writeHandle = await provider.TryAcquireWriteLockAsync(LockName);

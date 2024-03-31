@@ -72,12 +72,18 @@ public class FileDistributedLockTest
 
         using (@lock.Acquire())
         {
-            Assert.That(Directory.Exists(directoryName), Is.True);
-            Assert.That(File.Exists(@lock.Name), Is.True);
+            Assert.Multiple(() =>
+            {
+                Assert.That(Directory.Exists(directoryName), Is.True);
+                Assert.That(File.Exists(@lock.Name), Is.True);
+            });
         }
 
-        Assert.That(Directory.Exists(directoryName), Is.True);
-        Assert.That(File.Exists(@lock.Name), Is.False);
+        Assert.Multiple(() =>
+        {
+            Assert.That(Directory.Exists(directoryName), Is.True);
+            Assert.That(File.Exists(@lock.Name), Is.False);
+        });
 
         static string Hash(string text)
         {
@@ -253,8 +259,11 @@ public class FileDistributedLockTest
                 // Win <= 10 detection: see https://stackoverflow.com/a/69038652/1142970
                 && Environment.OSVersion.Version.Build < 22000)
             {
-                Assert.That(CanCreateFileWithName(variant), Is.False, variant);
-                Assert.That(Path.GetFileName(new FileDistributedLock(LockFileDirectoryInfo, name).Name), Is.Not.EqualTo(name), variant);
+                Assert.Multiple(() =>
+                {
+                    Assert.That(CanCreateFileWithName(variant), Is.False, variant);
+                    Assert.That(Path.GetFileName(new FileDistributedLock(LockFileDirectoryInfo, name).Name), Is.Not.EqualTo(name), variant);
+                });
             }
         }
     }

@@ -44,15 +44,21 @@ public abstract class ExternalConnectionOrTransactionStrategyTestCases<TLockProv
 
         Task.WhenAll(tasks).ContinueWith(_ => { }).Wait(TimeSpan.FromSeconds(15)).ShouldEqual(true, this.GetType().Name);
 
-        // MariaDB fails both tasks due to deadlock instead of just picking a single victim
-        Assert.That(tasks.Count(t => t.IsFaulted), Is.GreaterThanOrEqualTo(1));
-        Assert.That(tasks.Count(t => t.Status == TaskStatus.RanToCompletion), Is.LessThanOrEqualTo(1));
-        Assert.That(tasks.Where(t => t.IsCanceled), Is.Empty);
+        Assert.Multiple(() =>
+        {
+            // MariaDB fails both tasks due to deadlock instead of just picking a single victim
+            Assert.That(tasks.Count(t => t.IsFaulted), Is.GreaterThanOrEqualTo(1));
+            Assert.That(tasks.Count(t => t.Status == TaskStatus.RanToCompletion), Is.LessThanOrEqualTo(1));
+            Assert.That(tasks.Where(t => t.IsCanceled), Is.Empty);
+        });
 
         foreach (var deadlockVictim in tasks.Where(t => t.IsFaulted))
         {
-            Assert.That(deadlockVictim.Exception!.GetBaseException(), Is.InstanceOf<InvalidOperationException>()); // backwards compat check
-            Assert.That(deadlockVictim.Exception.GetBaseException(), Is.InstanceOf<DeadlockException>());
+            Assert.Multiple(() =>
+            {
+                Assert.That(deadlockVictim.Exception!.GetBaseException(), Is.InstanceOf<InvalidOperationException>()); // backwards compat check
+                Assert.That(deadlockVictim.Exception.GetBaseException(), Is.InstanceOf<DeadlockException>());
+            });
         }
     }
 

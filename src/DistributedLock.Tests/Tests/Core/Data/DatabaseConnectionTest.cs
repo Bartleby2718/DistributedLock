@@ -24,6 +24,6 @@ public class DatabaseConnectionTest
         using var handle = connection.ConnectionMonitor.GetMonitoringHandle();
         Assert.That(handle.ConnectionLostToken.IsCancellationRequested, Is.False);
         await db.KillSessionsAsync(db.ApplicationName, idleSince: null);
-        Assert.That(await TestHelper.WaitForAsync(() => new(handle.ConnectionLostToken.IsCancellationRequested), timeout: TimeSpan.FromSeconds(5)), Is.True);
+        await Assert.ThatAsync(() => TestHelper.WaitForAsync(() => new(handle.ConnectionLostToken.IsCancellationRequested), timeout: TimeSpan.FromSeconds(5)), Is.True);
     }
 }

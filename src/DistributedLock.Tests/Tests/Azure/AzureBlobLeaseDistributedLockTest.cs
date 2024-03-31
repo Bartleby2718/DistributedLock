@@ -88,11 +88,11 @@ public class AzureBlobLeaseDistributedLockTest
         }
 
         await wrapper.CreateIfNotExistsAsync(metadata, CancellationToken.None);
-        Assert.That((await client.ExistsAsync()).Value, Is.True);
-        Assert.That((await client.GetPropertiesAsync()).Value.Metadata, Is.EqualTo(metadata).AsCollection);
+        await Assert.ThatAsync(async () => (await client.ExistsAsync()).Value, Is.True);
+        await Assert.ThatAsync(async () => (await client.GetPropertiesAsync()).Value.Metadata, Is.EqualTo(metadata).AsCollection);
 
         Assert.DoesNotThrowAsync(async () => await wrapper.CreateIfNotExistsAsync(metadata, CancellationToken.None));
-        Assert.That((await client.ExistsAsync()).Value, Is.True);
+        await Assert.ThatAsync(async () => (await client.ExistsAsync()).Value, Is.True);
     }
 
     [Test]
