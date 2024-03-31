@@ -263,8 +263,8 @@ public abstract class DistributedLockCoreTestCases<TLockProvider, TStrategy>
             Assert.Multiple(() =>
             {
                 // otherwise, check that the names still contain the suffixes we added
-                Assert.That(lowerName.IndexOf(lowerBaseName, StringComparison.OrdinalIgnoreCase) >= 0, Is.True);
-                Assert.That(upperName.IndexOf(upperBaseName, StringComparison.OrdinalIgnoreCase) >= 0, Is.True);
+                Assert.That(lowerName.IndexOf(lowerBaseName, StringComparison.OrdinalIgnoreCase), Is.GreaterThanOrEqualTo(0));
+                Assert.That(upperName.IndexOf(upperBaseName, StringComparison.OrdinalIgnoreCase), Is.GreaterThanOrEqualTo(0));
             });
         }
     }

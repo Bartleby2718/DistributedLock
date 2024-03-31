@@ -98,7 +98,7 @@ public class ApiTest
             var code = File.ReadAllText(codeFile);
             var awaitCount = awaitRegex.Matches(code).Cast<Match>().Count(m => m.Groups["await"].Success);
             var configureAwaitCount = configureAwaitRegex.Matches(code).Count;
-            Assert.That(configureAwaitCount >= awaitCount, Is.True, $"ConfigureAwait(false) count ({configureAwaitCount}) < await count ({awaitCount}) in {codeFile}");
+            Assert.That(configureAwaitCount, Is.GreaterThanOrEqualTo(awaitCount), $"ConfigureAwait(false) count ({configureAwaitCount}) < await count ({awaitCount}) in {codeFile}");
         }
     }
 
