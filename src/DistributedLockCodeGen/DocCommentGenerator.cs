@@ -22,7 +22,11 @@ public class DocCommentGenerator
         Assert.That(changes.Select(t => t.file), Is.Empty);
     }
 
+#pragma warning disable NUnit1028 // The non-test method is public
+    // false positive; used in GenerateIDistributedLockImplementations
+    // reported in https://github.com/nunit/nunit.analyzers/issues/714
     internal static string AddDocComments(string code)
+#pragma warning restore NUnit1028 // The non-test method is public
     {
         if (!CodeGenHelpers.HasPublicType(code, out var typeInfo)) { return code; }
 

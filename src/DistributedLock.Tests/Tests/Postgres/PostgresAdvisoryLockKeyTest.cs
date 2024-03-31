@@ -123,8 +123,8 @@ public class PostgresAdvisoryLockKeyTest
         Assert.Multiple(() =>
         {
             Assert.That(b, Is.Not.EqualTo(a));
-            Assert.That(a == b, Is.False);
-            Assert.That(a != b, Is.True);
+            Assert.That(a, Is.Not.EqualTo(b));
+            Assert.That(a, Is.Not.EqualTo(b));
         });
         Assert.That(b.GetHashCode(), Is.Not.EqualTo(a.GetHashCode()));
         if (a.HasSingleKey && b.HasSingleKey)
@@ -142,8 +142,8 @@ public class PostgresAdvisoryLockKeyTest
         Assert.Multiple(() =>
         {
             Assert.That(b, Is.EqualTo(a));
-            Assert.That(a == b, Is.True);
-            Assert.That(a != b, Is.False);
+            Assert.That(a, Is.EqualTo(b));
+            Assert.That(a, Is.EqualTo(b));
         });
         Assert.That(b.GetHashCode(), Is.EqualTo(a.GetHashCode()));
         if (a.HasSingleKey)

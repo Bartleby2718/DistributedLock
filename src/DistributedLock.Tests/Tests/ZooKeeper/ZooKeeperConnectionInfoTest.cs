@@ -29,11 +29,11 @@ public class ZooKeeperConnectionInfoTest
             })
         };
 
-        Assert.That(connectionA == connectionB, Is.True);
+        Assert.That(connectionA, Is.EqualTo(connectionB));
         connectionA.GetHashCode().ShouldEqual(connectionB.GetHashCode());
         Assert.Multiple(() =>
         {
-            Assert.That(connectionA == connectionC, Is.False);
+            Assert.That(connectionA, Is.Not.EqualTo(connectionC));
             Assert.That(connectionC.GetHashCode(), Is.Not.EqualTo(connectionA.GetHashCode()));
         });
     }

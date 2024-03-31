@@ -72,11 +72,11 @@ public class TimeoutValueTest
                 {
                     Assert.Multiple(() =>
                     {
-                        Assert.That(aValue == bValue, Is.True);
-                        Assert.That(aValue != bValue, Is.False);
-                        Assert.That(aValue.Equals(bValue), Is.True);
-                        Assert.That(aValue.Equals((object)bValue), Is.True);
-                        Assert.That(Equals(aValue, bValue), Is.True);
+                        Assert.That(aValue, Is.EqualTo(bValue));
+                        Assert.That(aValue, Is.EqualTo(bValue));
+                        Assert.That(aValue, Is.EqualTo(bValue));
+                        Assert.That(aValue, Is.EqualTo((object)bValue));
+                        Assert.That(aValue, Is.EqualTo(bValue));
                         Assert.That(bValue.GetHashCode(), Is.EqualTo(aValue.GetHashCode()));
                     });
                 }
@@ -84,11 +84,11 @@ public class TimeoutValueTest
                 {
                     Assert.Multiple(() =>
                     {
-                        Assert.That(aValue == bValue, Is.False);
-                        Assert.That(aValue != bValue, Is.True);
-                        Assert.That(aValue.Equals(bValue), Is.False);
-                        Assert.That(aValue.Equals((object)bValue), Is.False);
-                        Assert.That(Equals(aValue, bValue), Is.False);
+                        Assert.That(aValue, Is.Not.EqualTo(bValue));
+                        Assert.That(aValue, Is.Not.EqualTo(bValue));
+                        Assert.That(aValue, Is.Not.EqualTo(bValue));
+                        Assert.That(aValue, Is.Not.EqualTo((object)bValue));
+                        Assert.That(aValue, Is.Not.EqualTo(bValue));
                         Assert.That(bValue.GetHashCode(), Is.Not.EqualTo(aValue.GetHashCode()));
                     });
                 }

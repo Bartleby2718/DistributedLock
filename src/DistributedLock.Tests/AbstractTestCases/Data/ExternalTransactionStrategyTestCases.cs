@@ -56,6 +56,7 @@ public abstract class ExternalTransactionStrategyTestCases<TLockProvider, TDb>
             new() { Connection = this.Test!._lockProvider.Strategy.AmbientTransaction!.Connection };
     }
 
+    [Test]
     public void TestCloseTransactionLockOnClosedConnectionOrTransaction([Values] bool closeConnection)
     {
         var lockName = closeConnection ? "Connection" : "Transaction";
