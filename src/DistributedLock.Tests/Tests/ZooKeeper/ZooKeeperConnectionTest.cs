@@ -4,7 +4,9 @@ using Medallion.Threading.Internal;
 
 namespace Medallion.Threading.Tests.ZooKeeper;
 
+using Moq;
 using org.apache.zookeeper;
+using org.apache.zookeeper.data;
 
 public class ZooKeeperConnectionTest
 {
@@ -77,6 +79,25 @@ public class ZooKeeperConnectionTest
     {
         var pool = new ZooKeeperConnection.Pool(maxAge: TimeSpan.FromSeconds(10));
         Assert.ThrowsAsync<TimeoutException>(() => pool.ConnectAsync(GetConnectionInfo(connectTimeout: TimeSpan.Zero), CancellationToken.None));
+    }
+
+    [Test]
+    public void TestHandleConnectionLossException()
+    {
+        var mockConnection = new Mock<ZooKeeperConnection>();
+
+        var callCount = 0;
+        mockConnection.Setup(m => m.ZooKeeper.createAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<List<ACL>>(), It.IsAny<CreateMode>()))
+            .Callback(() => callCount++)
+            .Throws(new KeeperException.ConnectionLossException());
+
+        var exception = Assert.ThrowsAsync<KeeperException.ConnectionLossException>(async () =>
+        {
+            await mockConnection.Object.CreateEphemeralSequentialNode(directory: new ZooKeeperPath("/test"), namePrefix: "node", new List<ACL>(), ensureDirectoryExists: true);
+        });
+
+        Assert.NotNull(exception);
+        Assert.AreEqual(3, callCount, "Expected method to be retried 3 times");
     }
 
     [Test]
